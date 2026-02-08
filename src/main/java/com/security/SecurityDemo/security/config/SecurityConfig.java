@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -23,6 +24,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Bean
@@ -31,11 +33,11 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .httpBasic(basic -> Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))// Recomendado deshabilitar para pruebas iniciales
-                .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(HttpMethod.GET, "/holanoseg").permitAll();
-                    auth.requestMatchers(HttpMethod.GET, "/holaseg").hasAuthority("READ");
-                    auth.anyRequest().denyAll();             // Todo lo demás requiere login
-                })
+//                .authorizeHttpRequests(auth -> {
+//                    auth.requestMatchers(HttpMethod.GET, "/holanoseg").permitAll();
+//                    auth.requestMatchers(HttpMethod.GET, "/holaseg").hasAuthority("READ");
+//                    auth.anyRequest().denyAll();             // Todo lo demás requiere login
+//                })
                 .build();
     }
 
@@ -45,9 +47,9 @@ public class SecurityConfig {
     }
 
 
-
     @Bean
     public AuthenticationProvider authenticationProvider(){
+        // DaoAuthenticationProvider: objeto de acceso a datos de autenticacion
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService());
         provider.setPasswordEncoder(passwordEncoder());
         //provider.setUserDetailsService(userDetailsService());
@@ -55,12 +57,11 @@ public class SecurityConfig {
     }
 
 
-
-
     @Bean
     public PasswordEncoder passwordEncoder(){
         return NoOpPasswordEncoder.getInstance();
     }
+    //el password encoder retorna el algoritmo por el cual se codifican las contraseñas
 
 
     @Bean
@@ -87,8 +88,6 @@ public class SecurityConfig {
 
         return new InMemoryUserDetailsManager(userDetailsList);
     }
-
-
 
 
 }
