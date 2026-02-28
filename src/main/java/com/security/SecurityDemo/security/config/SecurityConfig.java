@@ -1,8 +1,8 @@
 
 package com.security.SecurityDemo.security.config;
+import com.security.SecurityDemo.service.UserDetailsServiceImp;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -12,15 +12,10 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -48,9 +43,9 @@ public class SecurityConfig {
 
 
     @Bean
-    public AuthenticationProvider authenticationProvider(){
+    public AuthenticationProvider authenticationProvider(UserDetailsServiceImp userDetailsService){
         // DaoAuthenticationProvider: objeto de acceso a datos de autenticacion
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService());
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
         //provider.setUserDetailsService(userDetailsService());
         return provider;
@@ -64,30 +59,30 @@ public class SecurityConfig {
     //el password encoder retorna el algoritmo por el cual se codifican las contraseñas
 
 
-    @Bean
-    public UserDetailsService userDetailsService () {
-        List userDetailsList = new ArrayList<>();
-
-        userDetailsList.add(User.withUsername("flauta")
-                .password("123") // esto si no está codificado, sino, tiene que seguir el algoritmo de codificación
-                .roles("ADMIN")
-                .authorities("CREATE", "READ", "UPDATE", "DELETE")
-                .build());
-
-        userDetailsList.add(User.withUsername("rocky")
-                .password("123") // esto si no está codificado, sino, tiene que seguir el algoritmo de codificación
-                .roles("USER")
-                .authorities("READ")
-                .build());
-
-        userDetailsList.add(User.withUsername("satelital")
-                .password("123") // esto si no está codificado, sino, tiene que seguir el algoritmo de codificación
-                .roles("USER")
-                .authorities("UPDATE")
-                .build());
-
-        return new InMemoryUserDetailsManager(userDetailsList);
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService () {
+//        List userDetailsList = new ArrayList<>();
+//
+//        userDetailsList.add(User.withUsername("flauta")
+//                .password("123") // esto si no está codificado, sino, tiene que seguir el algoritmo de codificación
+//                .roles("ADMIN")
+//                .authorities("CREATE", "READ", "UPDATE", "DELETE")
+//                .build());
+//
+//        userDetailsList.add(User.withUsername("rocky")
+//                .password("123") // esto si no está codificado, sino, tiene que seguir el algoritmo de codificación
+//                .roles("USER")
+//                .authorities("READ")
+//                .build());
+//
+//        userDetailsList.add(User.withUsername("satelital")
+//                .password("123") // esto si no está codificado, sino, tiene que seguir el algoritmo de codificación
+//                .roles("USER")
+//                .authorities("UPDATE")
+//                .build());
+//
+//        return new InMemoryUserDetailsManager(userDetailsList);
+//    }
 
 
 }
