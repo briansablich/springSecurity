@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IPermissionService {
-    List findAll();
+    List<Permission> findAll();
     Optional<Permission> findById(Long id);
     Permission save(Permission permission);
     void deleteById(Long id);

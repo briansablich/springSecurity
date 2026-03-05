@@ -16,7 +16,7 @@ public class UserService implements IUserService {
     private IUserRepository userRepository;
 
     @Override
-    public List findAll() {
+    public List<UserSec> findAll() {
         return userRepository.findAll();
     }
 

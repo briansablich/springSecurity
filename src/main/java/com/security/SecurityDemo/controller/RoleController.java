@@ -25,19 +25,19 @@ public class RoleController {
     private IPermissionService permissionService;
 
     @GetMapping
-    public ResponseEntity<List> getAllRoles() {
-        List roles = roleService.findAll();
+    public ResponseEntity<List<Role>> getAllRoles() {
+        List<Role> roles = roleService.findAll();
         return ResponseEntity.ok(roles);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getRoleById(@PathVariable Long id) {
+    public ResponseEntity<Role> getRoleById(@PathVariable Long id) {
         Optional<Role> role = roleService.findById(id);
         return role.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity createRole(@RequestBody Role role) {
+    public ResponseEntity<Role> createRole(@RequestBody Role role) {
         Set<Permission> permissionList = new HashSet<>();
         Permission readPermission;
 
