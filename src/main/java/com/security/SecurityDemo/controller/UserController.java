@@ -7,6 +7,7 @@ import com.security.SecurityDemo.service.IRoleService;
 import com.security.SecurityDemo.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+@PreAuthorize("hasAuthority('READ')")
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -36,6 +38,7 @@ public class UserController {
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PreAuthorize("hasAuthority('CREATE') and hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<UserSec> createUser(@RequestBody UserSec userSec) {
 

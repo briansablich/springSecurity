@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @PreAuthorize("denyAll()")
 public class HelloWorldController {
 
-        @PreAuthorize("hasAuthority('READ')")
+        @PreAuthorize("hasAuthority('ROLE_ADMIN')")
         @GetMapping("/holaseg")
         public String secHelloWorld() {
             return "Hola Mundo TodoCode con seguridad";

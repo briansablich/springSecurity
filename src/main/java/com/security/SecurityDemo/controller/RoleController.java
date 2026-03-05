@@ -7,6 +7,7 @@ import com.security.SecurityDemo.service.IPermissionService;
 import com.security.SecurityDemo.service.IRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+@PreAuthorize("hasAuthority('READ')")
 @RestController
 @RequestMapping("/api/roles")
 public class RoleController {
@@ -36,6 +38,7 @@ public class RoleController {
         return role.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PreAuthorize("hasAuthority('CREATE') and hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<Role> createRole(@RequestBody Role role) {
         Set<Permission> permissionList = new HashSet<>();
@@ -53,5 +56,12 @@ public class RoleController {
         role.setPermissionsList(permissionList);
         Role newRole = roleService.save(role);
         return ResponseEntity.ok(newRole);
+    }
+
+    @PreAuthorize("hasRole('ADMIN') and hasAuthority('UPDATE')")
+    @PatchMapping
+    public ResponseEntity<Role> updateRole(@RequestBody Role role) {
+        Role updatedRole = roleService.save(role);
+        return ResponseEntity.ok(updatedRole);
     }
 }

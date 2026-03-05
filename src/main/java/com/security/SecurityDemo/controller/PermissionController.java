@@ -5,11 +5,13 @@ import com.security.SecurityDemo.model.Permission;
 import com.security.SecurityDemo.service.IPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
+@PreAuthorize("hasAuthority('READ')")
 @RestController
 @RequestMapping("/api/permissions")
 public class PermissionController {
@@ -29,6 +31,7 @@ public class PermissionController {
         return permission.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<Permission> createPermission(@RequestBody Permission permission) {
         Permission newPermission = permissionService.save(permission);
